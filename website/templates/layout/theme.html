@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Disease Symptoms - {% block title %}{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.css">
+</head>
+<body>
+    {% include 'components/navbar.html' %}
+
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+    <script src="/js/bootstrap.bundle.js"></script>
+</body>
+</html>
