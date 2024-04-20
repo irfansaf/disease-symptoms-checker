@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Disease Symptoms - {% block title %}{% endblock %}</title>
     <link rel="stylesheet" type="text/css" href="/css/bootstrap.css">
+    {% block styles %}{% endblock %}
 </head>
 <body>
     {% include 'components/navbar.html' %}
@@ -16,5 +17,6 @@
     </div>
 
     <script src="/js/bootstrap.bundle.js"></script>
+    {% block scripts %}{% endblock %}
 </body>
 </html>
