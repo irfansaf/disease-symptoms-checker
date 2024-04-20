@@ -27,8 +27,30 @@
                 <button type="button" id="predict" class="btn btn-success">Predict Disease</button>
             </div>
         </form>
-        <ul id="symptoms-list" class="list-group mb-4"></ul>
-        <div id="result"></div>
+        <h2 class="mb-4" style="display: none;">Selected Symptoms</h2>
+        <ul id="symptoms-list" class="list-group mb-4" style="display: none;"></ul>
+
+        <h2 class="mb-4" style="display: none;">Most Probable Disease</h2>
+        <div id="most-probable" class="card mb-4" style="display: none;">
+            <div class="card-body">
+                <!-- Disease information will be inserted here -->
+            </div>
+        </div>
+
+        <h2 class="mb-4" style="display: none;">Other Probable Diseases</h2>
+        <div class="accordion" id="accordionExample" style="display: none;">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                        Click to expand
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                    <div class="accordion-body" id="result">
+                        <!-- Probable diseases will be inserted here -->
+                    </div>
+                </div>
+            </div>
     </div>
 {% endblock %}
 
@@ -69,7 +91,7 @@
             var symptom = $("#symptom").val();
             selectedSymptoms.push(symptom);
             $("#symptoms-list").append("<li class='list-group item'>" + symptom + "</li>");
-
+            $("h2:contains('Selected Symptoms'), #symptoms-list").show();
             $("#symptom").val("");
         });
 
@@ -81,7 +103,21 @@
                 method: 'POST',
                 success: function(response) {
                     $("#result").empty();
-                    response.forEach(function(item) {
+                    $("#most-probable .card-body").empty();
+
+                    // Sort the response by probability in descending order
+                    response.sort(function(a, b) {
+                        return b.probability - a.probability;
+                    });
+
+                    // Display the disease with the highest probability
+                    var mostProbable = response[0];
+                    $("#most-probable .card-body").append("<h5 class='card-title'>" + mostProbable.disease + "</h5><p class='card-text'><strong>Probability:</strong> " + mostProbable.probability + "<br><strong>Description:</strong> " + mostProbable.description + "<br><strong>Precautions:</strong> " + mostProbable.precautions.join(", ") + "</p>");
+
+                    $("h2:contains('Most Probable Disease'), #most-probable, h2:contains('Other Probable Diseases'), #accordionExample").show();
+
+                    // Display the other diseases
+                    response.slice(1).forEach(function(item) {
                         $("#result").append("<p><strong>Disease:</strong> " + item.disease + "<br><strong>Probability:</strong> " + item.probability + "<br><strong>Description:</strong> " + item.description + "<br><strong>Precautions:</strong> " + item.precautions.join(", ") + "</p>");
                     });
                 }
